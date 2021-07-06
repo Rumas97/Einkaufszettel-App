@@ -1,6 +1,7 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import { CSVLink } from 'react-csv';
+import CSVReader from 'react-csv-reader'
 import './index.css';
 
 function App() {
@@ -22,14 +23,30 @@ function App() {
     headers:headers,
     data:items
   }
+
+  const handleImport = (data, fileInfo) => {
+
+    console.log(data, fileInfo)
+    data.map((singleData)=>{
+      console.log("singleDtaa",singleData[0])
+      const newItem = {
+        itemName: singleData[0],
+        quantity: singleData[1]
+      };
+  
+    const newItems = [...items, newItem];
+    console.log("newItems",newItems)
+    setItems(newItems)})
+    
+    console.log("Data",data[0])
+  };
   
 
-  // method to add new foods to the list
+  // method to add new items to the list
   const handleAddButtonClick = () => {
 		const newItem = {
 			itemName: inputValue,
-			quantity: 1,
-			isSelected: false,
+			quantity: 1
 		};
 
 		const newItems = [...items, newItem];
@@ -75,6 +92,7 @@ function App() {
 
   // }
 
+  console.log(items)
   
   return (
     <div>
@@ -104,6 +122,10 @@ function App() {
 				</div>
         
       <CSVLink {...csvReport}>Export</CSVLink>
+      <CSVReader
+      label="Select CSV Shopping List File"
+      onFileLoaded={handleImport}
+    />
       {/* <button onClick={downloadTxtFile}>Download</button> */}
     </div>
     
