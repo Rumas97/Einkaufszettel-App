@@ -1,16 +1,28 @@
-import logo from './logo.svg';
 import './App.css';
 import React, { useState, useEffect } from 'react';
+import { CSVLink } from 'react-csv';
 import './index.css';
 
 function App() {
   const [items, setItems] =  useState([
-    {itemName: 'item1', quantity:1, isSelected: false},
-    {itemName: 'item2', quantity:1, isSelected: false},
-    {itemName: 'item3', quantity:1, isSelected: false}
+    {itemName: 'item1', quantity:1},
+    {itemName: 'item2', quantity:1},
+    {itemName: 'item3', quantity:1}
   ])
 
   const [inputValue, setInputValue] = useState('');
+
+  const headers = [
+    {label:"item name", key:"itemName"},
+    {label:"quantity", key:"quantity"}
+  ]
+
+  const csvReport = {
+    filename:"Shopping-list.csv",
+    headers:headers,
+    data:items
+  }
+  
 
   // method to add new foods to the list
   const handleAddButtonClick = () => {
@@ -50,22 +62,23 @@ function App() {
 		
 	};
 
-  const downloadTxtFile =()=>{
-    const element= document.currentElement('a')
-    const file= new Blob([document.getElementById('input').value],{
-      type: "text/plain;charset-utf-8"
-    })
+  // const downloadTxtFile =(event)=>{
+  //   const element= document.createElement('a')
+  //   const file= new Blob([document.getElementById('test').value],{
+  //     type: "text/plain;charset=utf-8"
+  //   })
 
-    element.href =  URL.createObjectURL(file)
-    element.download="NewDocument.txt"
-    document.body.appendChild(element)
-    element.click()
+  //   element.href =  URL.createObjectURL(file)
+  //   element.download="NewDocument.txt"
+  //   document.body.appendChild(element)
+  //   element.click()
 
-  }
+  // }
 
+  
   return (
     <div>
-    <input id="input"/>
+    {/* <input type="object" id="test" value={items}/> */}
       <div className='add-item-box'>
 					<input value={inputValue} onChange={(event) => setInputValue(event.target.value)} className='add-item-input' placeholder='Add an item...' />
 					<button onClick={() => handleAddButtonClick()}>Add</button>
@@ -74,7 +87,7 @@ function App() {
 					{items.map((item, index) => (
 						<div className='item-container'>
 							<div className='item-name'>
-                <span>{item.itemName}</span>
+                <span >{item.itemName}</span>
               </div>
 							
 							<div className='quantity'>
@@ -89,8 +102,9 @@ function App() {
 						</div>
 					))}
 				</div>
-      
-      <button onClick={downloadTxtFile}>Download</button>
+        
+      <CSVLink {...csvReport}>Export</CSVLink>
+      {/* <button onClick={downloadTxtFile}>Download</button> */}
     </div>
     
   );
